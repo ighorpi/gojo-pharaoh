@@ -6,8 +6,11 @@ import {
   ContextOf,
   SlashCommandContext,
   SlashCommand,
+  MessageCommandContext,
+  TargetMessage,
+  MessageCommand,
 } from 'necord';
-import { Client, Guild } from 'discord.js';
+import { Client, Guild, Message } from 'discord.js';
 import {
   joinVoiceChannel,
   VoiceConnectionStatus,
@@ -123,5 +126,28 @@ export class AppUpdate implements OnApplicationBootstrap {
         content: 'Ocorreu um erro ao reproduzir o som.',
       });
     }
+  }
+
+  @MessageCommand({
+    name: 'Stand Proud',
+  })
+  async standProud(
+    @Context() [interaction]: MessageCommandContext,
+    @TargetMessage() message: Message,
+  ) {
+    await interaction.deferReply({
+      ephemeral: true,
+    });
+    if (message.author === this.client.user) {
+      return await interaction.editReply({
+        content: "You can't... as long I am the strongest!",
+      });
+    }
+    await message.reply({
+      content: `Stand proud ${message.author.username} you are strong!\n`,
+    });
+    return await interaction.editReply({
+      content: 'stand proud enviado!',
+    });
   }
 }
