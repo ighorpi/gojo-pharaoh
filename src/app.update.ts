@@ -279,4 +279,55 @@ export class AppUpdate implements OnApplicationBootstrap {
       content: '<:gege:1199925880626106368>',
     });
   }
+  @UserCommand({
+    name: 'Banir',
+    defaultMemberPermissions: [PermissionsBitField.Flags.BanMembers],
+  })
+  async banirApp(
+    @Context() [interaction]: UserCommandContext,
+    @TargetUser() user: User,
+  ) {
+    await interaction.deferReply({ ephemeral: true });
+    const embed = new EmbedBuilder()
+      .setTitle(`${user.displayName} foi banido!`)
+      .setImage('https://media1.tenor.com/m/DSyo0NKX8gMAAAAC/gojo-satoru.gif');
+    if (
+      interaction.memberPermissions.has(PermissionFlagsBits.BanMembers) ||
+      interaction.memberPermissions.has(PermissionFlagsBits.Administrator)
+    ) {
+      return interaction.editReply({
+        content: `Sem permissão suficientes para banir ${user.username}!`,
+      });
+    }
+    await interaction.guild.systemChannel.send({ embeds: [embed] });
+    return interaction.editReply({
+      content: `Usuário (${user.username}) foi banido!`,
+    });
+  }
+
+  @UserCommand({
+    name: 'Kickar',
+    defaultMemberPermissions: [PermissionsBitField.Flags.KickMembers],
+  })
+  async kickarApp(
+    @Context() [interaction]: UserCommandContext,
+    @TargetUser() user: User,
+  ) {
+    await interaction.deferReply({ ephemeral: true });
+    const embed = new EmbedBuilder()
+      .setTitle(`${user.displayName} foi kickado!`)
+      .setImage('https://media1.tenor.com/m/lokEwYDwUPwAAAAC/gojo-satoru.gif');
+    if (
+      interaction.memberPermissions.has(PermissionFlagsBits.KickMembers) ||
+      interaction.memberPermissions.has(PermissionFlagsBits.Administrator)
+    ) {
+      return interaction.editReply({
+        content: `Sem permissão suficientes para kickar ${user.username}!`,
+      });
+    }
+    await interaction.guild.systemChannel.send({ embeds: [embed] });
+    return interaction.editReply({
+      content: `Usuário ${user.username} foi kickado!`,
+    });
+  }
 }
