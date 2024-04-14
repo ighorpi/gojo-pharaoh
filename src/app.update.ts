@@ -9,8 +9,20 @@ import {
   MessageCommandContext,
   TargetMessage,
   MessageCommand,
+  Options,
+  UserCommand,
+  TargetUser,
+  UserCommandContext,
 } from 'necord';
-import { Client, Guild, Message } from 'discord.js';
+import {
+  Client,
+  EmbedBuilder,
+  Guild,
+  Message,
+  PermissionFlagsBits,
+  PermissionsBitField,
+  User,
+} from 'discord.js';
 import {
   joinVoiceChannel,
   VoiceConnectionStatus,
@@ -19,6 +31,7 @@ import {
   createAudioResource,
   AudioPlayer,
 } from '@discordjs/voice';
+import { GuildChannelRadio } from './dto/radio';
 
 @Injectable()
 export class AppUpdate implements OnApplicationBootstrap {
@@ -56,19 +69,20 @@ export class AppUpdate implements OnApplicationBootstrap {
     description: 'Desconecta o bot do canal de voz',
   })
   public async desconectar(@Context() [interaction]: SlashCommandContext) {
+    await interaction.deferReply({
+      ephemeral: true,
+    });
     const guildId = interaction.guildId;
     const voiceConnection = this.voiceConnections.get(guildId);
     if (voiceConnection) {
       voiceConnection.disconnect();
       this.voiceConnections.delete(guildId);
-      return interaction.reply({
+      return interaction.editReply({
         content: 'Bot desconectado do canal de voz.',
-        ephemeral: true,
       });
     } else {
-      return interaction.reply({
+      return interaction.editReply({
         content: 'O bot não está conectado a nenhum canal de voz.',
-        ephemeral: true,
       });
     }
   }
@@ -77,7 +91,10 @@ export class AppUpdate implements OnApplicationBootstrap {
     name: 'lobotomy-kaisen-radio',
     description: 'Summona o Gojo Faraoh',
   })
-  public async onRadio(@Context() [interaction]: SlashCommandContext) {
+  public async onRadio(
+    @Context() [interaction]: SlashCommandContext,
+    @Options() { channel }: GuildChannelRadio,
+  ) {
     await interaction.deferReply({ ephemeral: true });
 
     const guildId = interaction.guildId;
@@ -85,18 +102,23 @@ export class AppUpdate implements OnApplicationBootstrap {
     const member = guild.members.resolve(interaction.user);
     const voiceChannel = member?.voice.channel;
 
-    if (!voiceChannel) {
+    if (!voiceChannel && !channel) {
       return interaction.editReply({
         content:
-          'Você precisa estar em um canal de voz para usar este comando.',
+          'Você precisa estar em um canal de voz ou selecionar um canal de voz para usar esse comando.',
       });
     }
-
-    const connection = joinVoiceChannel({
-      channelId: voiceChannel.id,
-      guildId: guildId,
-      adapterCreator: guild.voiceAdapterCreator,
-    });
+    const connection = channel
+      ? joinVoiceChannel({
+          channelId: channel.id,
+          guildId: guildId,
+          adapterCreator: guild.voiceAdapterCreator,
+        })
+      : joinVoiceChannel({
+          channelId: voiceChannel.id,
+          guildId: guildId,
+          adapterCreator: guild.voiceAdapterCreator,
+        });
 
     connection.on(VoiceConnectionStatus.Ready, () => {
       interaction.editReply({
@@ -136,18 +158,125 @@ export class AppUpdate implements OnApplicationBootstrap {
     @TargetMessage() message: Message,
   ) {
     await interaction.deferReply({
-      ephemeral: true,
+      ephemeral: false,
     });
     if (message.author === this.client.user) {
+      const embed = new EmbedBuilder()
+        .setTitle("You can't... as long I am the strongest!")
+        .setImage(
+          'https://media1.tenor.com/m/EVm3lHlEbd4AAAAC/gojo-jujutsu-kaisen.gif',
+        );
       return await interaction.editReply({
-        content: "You can't... as long I am the strongest!",
+        embeds: [embed],
       });
     }
+    const embed = new EmbedBuilder()
+      .setTitle(`Stand proud, you are strong!\n`)
+      .setImage(
+        'https://media1.tenor.com/m/6PzHzhNng_AAAAAC/sukuna-ryomen-sukuna.gif',
+      );
     await message.reply({
-      content: `Stand proud ${message.author.username} you are strong!\n`,
+      embeds: [embed],
     });
     return await interaction.editReply({
-      content: 'stand proud enviado!',
+      content: '<:gege:1199925880626106368>',
+    });
+  }
+
+  @MessageCommand({
+    name: 'You Are My Special',
+  })
+  async youAreMySpecial(
+    @Context() [interaction]: MessageCommandContext,
+    @TargetMessage() message: Message,
+  ) {
+    await interaction.deferReply({
+      ephemeral: false,
+    });
+    if (message.author === this.client.user) {
+      const embed = new EmbedBuilder()
+        .setTitle("You can't... as long I am the strongest!")
+        .setImage(
+          'https://media1.tenor.com/m/EVm3lHlEbd4AAAAC/gojo-jujutsu-kaisen.gif',
+        );
+      return await interaction.editReply({
+        embeds: [embed],
+      });
+    }
+    const embed = new EmbedBuilder()
+      .setTitle(`You Are My Special!`)
+      .setImage(
+        'https://media1.tenor.com/m/RRjpRxZN69YAAAAC/jujutsu-kaisen-jjk.gif',
+      );
+    await message.reply({
+      embeds: [embed],
+    });
+    return await interaction.editReply({
+      content: '<:gege:1199925880626106368>',
+    });
+  }
+
+  @MessageCommand({
+    name: 'You Are So Right',
+  })
+  async youAreRight(
+    @Context() [interaction]: MessageCommandContext,
+    @TargetMessage() message: Message,
+  ) {
+    await interaction.deferReply({
+      ephemeral: false,
+    });
+    if (message.author === this.client.user) {
+      const embed = new EmbedBuilder()
+        .setTitle("You can't... as long I am the strongest!")
+        .setImage(
+          'https://media1.tenor.com/m/EVm3lHlEbd4AAAAC/gojo-jujutsu-kaisen.gif',
+        );
+      return await interaction.editReply({
+        embeds: [embed],
+      });
+    }
+    const embed = new EmbedBuilder()
+      .setTitle(`Is It? Maybe? You are so right!`)
+      .setImage('https://media1.tenor.com/m/c67XWC0HaEwAAAAd/gojo-toji.gif');
+    await message.reply({
+      embeds: [embed],
+    });
+    return await interaction.editReply({
+      content: '<:gege:1199925880626106368>',
+    });
+  }
+
+  @MessageCommand({
+    name: "Nah, I'd Win",
+  })
+  async nahIdWin(
+    @Context() [interaction]: MessageCommandContext,
+    @TargetMessage() message: Message,
+  ) {
+    await interaction.deferReply({
+      ephemeral: false,
+    });
+    if (message.author === this.client.user) {
+      const embed = new EmbedBuilder()
+        .setTitle("You can't... as long I am the strongest!")
+        .setImage(
+          'https://media1.tenor.com/m/EVm3lHlEbd4AAAAC/gojo-jujutsu-kaisen.gif',
+        );
+      return await interaction.editReply({
+        embeds: [embed],
+      });
+    }
+    const embed = new EmbedBuilder()
+      .setTitle(`Nah, I'd win!`)
+      .setImage(
+        'https://media1.tenor.com/m/8UntVSgyu6QAAAAC/gojo-satoru-satoru-gojo.gif',
+      );
+    await message.reply({
+      embeds: [embed],
+    });
+    return await interaction.editReply({
+      content: '<:gege:1199925880626106368>',
     });
   }
 }
