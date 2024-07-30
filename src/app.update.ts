@@ -67,7 +67,6 @@ export class AppUpdate implements OnApplicationBootstrap {
       'gato safado',
       'gato caolho',
       'caolho',
-      'g*2',
       'gege akutami',
       'akutami',
       'gato amaldiçoado',
