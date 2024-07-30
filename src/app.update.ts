@@ -53,6 +53,36 @@ export class AppUpdate implements OnApplicationBootstrap {
     this.logger.warn(message);
   }
 
+  @On('messageCreate')
+  public onMessage(@Context() [message]: ContextOf<'messageCreate'>) {
+    const keywords = [
+      'gege',
+      'Gege',
+      'g2',
+      'g²',
+      'gegé',
+      'jujutsu',
+      'kaisen',
+      'gato maldito',
+      'gato safado',
+      'gato caolho',
+      'caolho',
+      'g*2',
+      'gege akutami',
+      'akutami',
+      'gato amaldiçoado',
+      'gato cursed',
+      'cursed cat',
+    ];
+    const messageContent = message.content;
+
+    const regex = new RegExp(keywords.join('|'), 'i');
+
+    if (regex.test(messageContent)) {
+      message.react('1267489697618198529');
+    }
+  }
+
   @SlashCommand({
     name: 'desconectar',
     description: 'Desconecta o bot do canal de voz',
