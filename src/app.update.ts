@@ -73,6 +73,13 @@ export class AppUpdate implements OnApplicationBootstrap {
       'gato cursed',
       'cursed cat',
       "Nah I'd win",
+      'you are so right',
+      'the ways in which you talk to me',
+      'Nah Id win',
+      'honrado',
+      'honrada',
+      'invicto',
+      'invicta',
     ];
     const messageContent = message.content;
 
