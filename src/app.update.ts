@@ -72,6 +72,7 @@ export class AppUpdate implements OnApplicationBootstrap {
       'gato amaldiçoado',
       'gato cursed',
       'cursed cat',
+      "Nah I'd win",
     ];
     const messageContent = message.content;
 
@@ -79,6 +80,7 @@ export class AppUpdate implements OnApplicationBootstrap {
 
     if (regex.test(messageContent)) {
       message.react('1267489697618198529');
+      // message.react('1199925880626106368');
     }
   }
 
