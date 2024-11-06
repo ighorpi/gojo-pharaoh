@@ -7,7 +7,7 @@ steps:
     image: woodpeckerci/plugin-docker-buildx
     # privileged: true
     settings:
-      repo: ighorpi/gojo-pharaoh-bot:latest
+      repo: ghcr.io/ighorpi/gojo-pharaoh-bot
       dockerfile: Dockerfile
       platforms: linux/amd64 #,linux/arm64
       auto_tag: true
