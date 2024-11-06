@@ -5,7 +5,7 @@ when:
 steps:
   publish-next-agent:
     image: woodpeckerci/plugin-docker-buildx
-    privileged: true
+    # privileged: true
     settings:
       repo: ghcr.io/ighorpi/gojo-pharaoh-bot:latest
       dockerfile: Dockerfile
