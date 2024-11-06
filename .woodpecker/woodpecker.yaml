@@ -19,7 +19,3 @@ steps:
     when:
       branch: ${CI_REPO_DEFAULT_BRANCH}
       event: push
-
-    when:
-      branch: ${CI_REPO_DEFAULT_BRANCH}
-      event: push
