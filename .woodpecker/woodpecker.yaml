@@ -1,0 +1,26 @@
+when:
+  event: [push]
+  branch: [main]
+
+steps:
+  publish-next-agent:
+    image: woodpeckerci/plugin-docker-buildx
+    privileged: true
+    settings:
+      repo: ghcr.io/ighorpi/gojo-pharaoh-bot:latest
+      dockerfile: Dockerfile
+      platforms: linux/amd64 #,linux/arm64
+      auto_tag: true
+      tag: next
+      # username:
+      #   from_secret: docker_username
+      # password:
+      #   from_secret: docker_password
+    when:
+      branch: ${CI_REPO_DEFAULT_BRANCH}
+      event: push
+  # - name: publish
+  #   image: plugins/docker
+  #   settings:
+  #     repo: ghcr.io/ighorpi/gojo-pharaoh-bot:latest
+  #     tags: latest
