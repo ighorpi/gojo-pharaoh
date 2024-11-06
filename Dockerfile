@@ -11,7 +11,7 @@ COPY tsconfig*.json .
 COPY .eslintrc.js .
 COPY nest*.json .
 COPY ./src .
-RUN npm install -g npm@10.4.0
+RUN npm install -g npm@latest
 RUN yarn
 RUN npm run build
 EXPOSE 3000
